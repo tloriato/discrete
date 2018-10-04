@@ -1,0 +1,39 @@
+def iVoting(win, loo, maxd, sc=0):
+  if (win, loo, maxd, sc) in hashTable:
+    return hashTable[win, loo, maxd, sc]
+  if win == 0 and loo == 0:
+    return 1
+  else:
+    if loo == 0:
+      hashTable[win, loo, maxd, sc] = 0 + iVoting(win - 1, loo, maxd, sc + 1)
+    else:
+      if sc + 1 < maxd and win > 0:
+        hashTable[win, loo, maxd, sc] = iVoting(win - 1, loo, maxd, sc + 1) + iVoting(win, loo - 1, maxd, sc - 1)
+      else:
+        hashTable[win, loo, maxd, sc] = 0 + iVoting(win, loo - 1, maxd, sc - 1)
+    return hashTable[win, loo, maxd, sc]
+
+def voting (a, b, c):
+  winnerVotes = b + ((a - b)/2)
+  looserVotes = a - winnerVotes
+  maxDifference = c
+  return iVoting(winnerVotes, looserVotes, maxDifference)
+
+## Main ##
+hashTable = {} 
+votes = open("voting.txt", 'r')
+
+a = int(votes.readline())
+b = int(votes.readline())
+c = int(votes.readline())
+
+votes.close()
+
+out = open("voting-saida.txt", 'w')
+
+voting(a, b, c)
+
+out.close()
+
+#print("Testando voting(70, 20, 30) :D")
+#print(voting(70,20,30))
