@@ -42,8 +42,28 @@ def fillMatrixOfSubsets(matrix, list, count, prefix=[]):
     for x in range(len(list)):
       fillMatrixOfSubsets(matrix, list[x+1:], count - 1, prefix + [list[x]])
 
-def friendlyGroup(array):
-  return False
+# Implementation of the Math.ceil(n) function,
+# that rounds up the number to the next integer
+def ceil(a,b):
+  return int(a/b + (a%b!=0))
+
+# Finds if the elements in matrix with those indexes
+# satisfy the condition that they must be
+# friends with at least half of them
+def friendlyGroup(indexes, matrix):
+  bound = ceil(len(indexes), 2)
+  for x in indexes:
+    elem = matrix[x]
+    rest = indexes[:x] + indexes[x+1 :]
+    connections = 0
+    for i in rest:
+      if connections >= bound:
+        break
+      if elem & (0 | (1 << (i + 1))):
+        connections += 1
+    if connections < bound:
+      return False
+  return True
 
 # Finds the biggest group of friends
 # given an Adjacency Matrix implemented in
@@ -52,13 +72,13 @@ def findMostFriendlyGroup(matrix):
   largestGroup = []
   for x in range(len(matrix), 0, -1):
     subset = []
-    fillMatrixOfSubsets(subset, matrix, x)
+    fillMatrixOfSubsets(subset, list(range(0, len(matrix))), x)
     for sset in subset:
-      friends = friendlyGroup(sset)
+      friends = friendlyGroup(sset, matrix)
       if friends == True:
         largestGroup = sset.copy()
-        break;
-  return 0
+        return largestGroup
+  return largestGroup
 
 
 community = open("comunidade.txt", 'r')
@@ -68,3 +88,5 @@ matrix = populateFromFile(community, nodes)
 
 largestSubGroup = findMostFriendlyGroup(matrix)
 
+# map(+1) because we start counting from 0 instead of 1
+print(list(map(lambda x: x + 1, largestSubGroup)))
