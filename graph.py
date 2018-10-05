@@ -54,17 +54,12 @@ def friendlyGroup(indexes, matrix):
   bound = ceil(len(indexes), 2)
   for x in indexes:
     elem = matrix[x]
-    rest = indexes[:x] + indexes[x+1 :]
-    connections = 0
-    for i in rest:
-      if connections >= bound:
-        break
-      if elem & (0 | (1 << (i + 1))):
-        connections += 1
-    if connections < bound:
+    mask = createMask(indexes[:x] + indexes[x+1 :])
+    if bin(elem & mask).count("1") < bound:
+      return False
       return False
   return True
-
+  
 # Finds the biggest group of friends
 # given an Adjacency Matrix implemented in
 # an array with bitmap
