@@ -17,6 +17,8 @@ def voting (a, b, c):
   winnerVotes = b + ((a - b)/2)
   looserVotes = a - winnerVotes
   maxDifference = c
+  if not winnerVotes.is_integer() or not looserVotes.is_integer() or c <= b:
+      raise ValueError('Wrong parameters!')
   return iVoting(winnerVotes, looserVotes, maxDifference)
 
 ## Main ##
@@ -31,7 +33,10 @@ votes.close()
 
 out = open("voting-saida.txt", 'w')
 
-voting(a, b, c)
+x = voting(a, b, c)
+
+print(a, b, c)
+print(x)
 
 out.close()
 
